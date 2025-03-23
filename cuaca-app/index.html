@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Cuaca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #43a4ca;
+        }
+        .container {
+            background: rgb(102, 152, 158);
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            margin: auto;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Info Cuaca</h1>
+        <input type="text" id="city" placeholder="Masukkan Kota">
+        <button onclick="getWeather()">Cari</button>
+        <h2 id="result"></h2>
+    </div>
+    <script>
+        function getWeather() {
+            let city = document.getElementById("city").value;
+            let apiKey = "YOUR_OPENWEATHERMAP_API_KEY";
+            let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("result").innerHTML =
+                        `<b>Kota:</b> ${city} <br>
+                        <b>Suhu:</b> ${data.main.temp}°C <br>
+                        <b>Kelembaban:</b> ${data.main.humidity}% <br>
+                        <b>Kecepatan Angin:</b> ${data.wind.speed} m/s <br>
+                        <b>Kondisi:</b> ${data.weather[0].description}`;
+                })
+                .catch(error => alert("Kota tidak ditemukan!"));
+        }
+    </script>
+</body>
+</html>
