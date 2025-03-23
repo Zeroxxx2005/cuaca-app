@@ -3,56 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Info Cuaca</title>
+    <title>Aplikasi Cuaca</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #43a4ca;
+            margin: 20px;
         }
         .container {
-            background: rgb(102, 152, 158);
-            padding: 20px;
-            border-radius: 10px;
-            width: 50%;
+            max-width: 400px;
             margin: auto;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
         }
-        input, button {
+        input {
+            width: 80%;
             padding: 10px;
-            margin: 10px;
-            font-size: 16px;
+            margin: 10px 0;
         }
-        #result {
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .weather-result {
             margin-top: 20px;
-            font-size: 18px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Info Cuaca</h1>
-        <input type="text" id="city" placeholder="Masukkan Kota">
-        <button onclick="getWeather()">Cari</button>
-        <h2 id="result"></h2>
+        <h2>Cek Cuaca</h2>
+        <input type="text" id="city" placeholder="Masukkan nama kota">
+        <button onclick="getWeather()">Cek Cuaca</button>
+        <div class="weather-result" id="result"></div>
     </div>
+
     <script>
         function getWeather() {
-            let city = document.getElementById("city").value;
-            let apiKey = "YOUR_OPENWEATHERMAP_API_KEY";
-            let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+            const apiKey = 'YOUR_API_KEY'; // Ganti dengan API key OpenWeatherMap Anda
+            const city = document.getElementById('city').value;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=id`;
 
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById("result").innerHTML =
-                        `<b>Kota:</b> ${city} <br>
-                        <b>Suhu:</b> ${data.main.temp}°C <br>
-                        <b>Kelembaban:</b> ${data.main.humidity}% <br>
-                        <b>Kecepatan Angin:</b> ${data.wind.speed} m/s <br>
-                        <b>Kondisi:</b> ${data.weather[0].description}`;
+                    if (data.cod === 200) {
+                        document.getElementById('result').innerHTML = `
+                            <h3>${data.name}, ${data.sys.country}</h3>
+                            <p>${data.weather[0].description}</p>
+                            <p>Temperatur: ${data.main.temp}°C</p>
+                            <p>Kelembaban: ${data.main.humidity}%</p>
+                            <p>Kecepatan Angin: ${data.wind.speed} m/s</p>
+                        `;
+                    } else {
+                        document.getElementById('result').innerHTML = `<p style="color:red;">Kota tidak ditemukan!</p>`;
+                    }
                 })
-                .catch(error => alert("Kota tidak ditemukan!"));
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `<p style="color:red;">Terjadi kesalahan!</p>`;
+                });
         }
     </script>
 </body>
